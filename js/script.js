@@ -80,11 +80,11 @@ function toggleColorsByTShirt() {
   colorSelect.disabled = true;
   tShirtThemeSelect.addEventListener("change", () => {
     colorSelect.disabled = false;
+    colorSelect.value = "Select a design theme above";
     Array.from(colorSelect.options).forEach((option) => {
       if (option.dataset.theme !== tShirtThemeSelect.value) {
         option.hidden = true;
-      }
-      if (option.dataset.theme === tShirtThemeSelect.value) {
+      } else {
         option.hidden = false;
       }
     });
