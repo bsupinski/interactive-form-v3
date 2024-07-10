@@ -83,7 +83,8 @@ function toggleColorsByTShirt() {
     Array.from(colorSelect.options).forEach((option) => {
       if (option.dataset.theme !== tShirtThemeSelect.value) {
         option.hidden = true;
-      } else {
+      }
+      if (option.dataset.theme === tShirtThemeSelect.value) {
         option.hidden = false;
       }
     });
