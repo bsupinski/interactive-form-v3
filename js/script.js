@@ -38,6 +38,19 @@ function elePassValidation(element) {
   element.parentElement.classList.remove("not-valid");
 }
 
+function ccLiveValidating(element, e, minNumber, maxNumber) {
+  eleFailValidation(element, e);
+  if (/[a-zA-z]/.test(element.value)) {
+    console.log(/^[a-zA-z]$/.test(element.value));
+    element.nextElementSibling.innerText =
+      "This field should not contain letters";
+  } else if (element.value.length <= minNumber) {
+    element.nextElementSibling.innerText = "To few numbers entered";
+  } else if (element.value.length >= maxNumber) {
+    element.nextElementSibling.innerText = "To many numbers entered";
+  }
+}
+
 //Sets the focus to the name input when the page loads
 function setNameFocus() {
   nameInput.focus();
@@ -83,10 +96,24 @@ function totalActivityCost() {
     total = 0;
     activityCheckboxes.forEach((checkbox) => {
       if (checkbox.checked) total += +checkbox.dataset.cost;
+      if (e.target.checked) {
+        if (
+          e.target.dataset.dayAndTime === checkbox.dataset.dayAndTime &&
+          checkbox !== e.target
+        ) {
+          checkbox.disabled = true;
+        }
+      }
+      if (!e.target.checked) {
+        if (e.target.dataset.dayAndTime === checkbox.dataset.dayAndTime)
+          checkbox.disabled = false;
+      }
     });
     activiesCost.innerHTML = `Total: $${total}`;
   });
 }
+
+//Prevent same time activiies
 
 // Changing payment method
 function changePayment() {
@@ -137,6 +164,32 @@ function ccZipValidating(ccZip) {
 function ccCvvValidating(ccCvv) {
   return /^\d{3}$/.test(ccCvv);
 }
+
+//Form live Validation
+form.addEventListener("input", (e) => {
+  if (e.target === ccNumber) {
+    if (!ccNumberValidating(ccNumber.value)) {
+      ccLiveValidating(ccNumber, e, 12, 17);
+    } else {
+      elePassValidation(ccNumber, e);
+    }
+  }
+  if (e.target === ccZip) {
+    if (!ccZipValidating(ccZip.value)) {
+      ccLiveValidating(ccZip, e, 4, 6);
+      console.log(ccZip.value.length);
+    } else {
+      elePassValidation(ccZip, e);
+    }
+  }
+  if (e.target === ccCvv) {
+    if (!ccCvvValidating(ccCvv.value)) {
+      ccLiveValidating(ccCvv, e, 2, 4);
+    } else {
+      elePassValidation(ccCvv, e);
+    }
+  }
+});
 
 // Form submit
 form.addEventListener("submit", (e) => {
